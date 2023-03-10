@@ -1,0 +1,23 @@
+services:
+  app:
+    container_name: web
+    image: webdevops/php-nginx:7.3-alpine
+    restart: always
+    ports:
+      - 11080:80
+    volumes:
+      - /compose/workupload/webdata:/app
+      - /compose/workupload/01-php.conf:/opt/docker/etc/nginx/vhost.common.d/01-php.conf
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public
+  db:
+    container_name: db
+    hostname: db
+    image: bitnami/mysql:5.7.41
+    restart: always
+    volumes:
+      - /compose/workupload/01.sql:/docker-entrypoint-initdb.d/01.sql
+      - /compose/workupload/dbdata:/app
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=db
